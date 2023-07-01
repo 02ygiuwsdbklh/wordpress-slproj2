@@ -1,33 +1,54 @@
-services:
-  db:
-    # We use a mariadb image which supports both amd64 & arm64 architecture
-    image: mariadb:10.6.4-focal
-    # If you really want to use MySQL, uncomment the following line
-    #image: mysql:8.0.27
-    command: '--default-authentication-plugin=mysql_native_password'
-    volumes:
-      - db_data:/var/lib/mysql
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=somewordpress
-      - MYSQL_DATABASE=wordpress
-      - MYSQL_USER=wordpress
-      - MYSQL_PASSWORD=wordpress
-    expose:
-      - 3306
-      - 33060
-  wordpress:
-    image: wordpress:latest
-    volumes:
-      - wp_data:/var/www/html
-    ports:
-      - 80:80
-    restart: always
-    environment:
-      - WORDPRESS_DB_HOST=db
-      - WORDPRESS_DB_USER=wordpress
-      - WORDPRESS_DB_PASSWORD=wordpress
-      - WORDPRESS_DB_NAME=wordpress
-volumes:
-  db_data:
-  wp_data:
+// plugins used: docker pipeline
+// setup dockerhub credentials in global security credentials
+
+
+pipeline{
+
+	agent any
+
+	environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockercred')
+	}
+
+	stages {
+	    
+	    stage('build') {
+	        steps {
+	            sh 'git clone https://github.com/noobx7wt2fDL/SLlab-proj2.git'
+	            //sh 'cd proj2'
+	            sh 'cd proj2 && ls && docker build -t tguha-nginx .'
+	            sh 'docker image ls'
+	        }
+	    }
+		stage('Tag') {
+			steps {
+				sh 'docker tag tguha-nginx tridevg/nginx-wordpress:v1'
+			}
+		}
+		stage('Login') {
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
+		stage('Push') {
+			steps {
+				sh 'docker push tridevg/nginx-wordpress:v1'
+			}
+		}
+	// Continous Delivery approval
+        stage('Approve Delivery of app?') {
+            steps {
+                input('Do you want to proceed?')
+            }
+        }
+        stage('App ontinuous Delivery Approved') {
+            steps {
+                sh 'docker run -d -p 80:80 --name=project2-nginx tridevg/nginx-wordpress:v1'
+            }
+        }
+		
+	}
+
+}
+
+

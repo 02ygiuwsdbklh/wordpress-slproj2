@@ -12,10 +12,15 @@ pipeline{
 	        steps {
 	            sh 'git clone https://github.com/noobx7wt2fDL/wordpress-slproj2.git'
 	            sh 'cd wordpress-slproj2 && ls && docker-compose up -d'
-	            sh 'docker image ls'
-                sh 'docker ps -a'
 	        }
 	    }
+
+		stage('verify') {
+			steps {
+				sh 'docker image ls'
+                sh 'docker ps -a'
+			}
+		}
 				
 	}
 

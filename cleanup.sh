@@ -13,3 +13,4 @@ sleep 2
 docker images
 docker ps -a
 docker volume ls
+rm -rf /var/lib/jenkins/workspace/wordpress/*

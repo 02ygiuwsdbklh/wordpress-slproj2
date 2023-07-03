@@ -18,7 +18,8 @@ pipeline{
 		stage('verify') {
 			steps {
 				sh 'docker image ls'
-                sh 'docker ps -a'
+                                sh 'docker ps -a'
+                                sh 'docker volume ls'
 			}
 		}
 				

@@ -18,7 +18,7 @@ services:
       - 3306
       - 33060
   wordpress:
-    image: wordpress:latest
+    image: wordpress:6.2
     volumes:
       - wp_data:/var/www/html
     ports:

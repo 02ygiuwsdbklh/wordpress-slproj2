@@ -5,7 +5,7 @@ docker rm $(docker ps -a -q)
 sleep 2
 docker rmi wordpress:6.2
 sleep 2
-docker rmi mariadb:11.0.2
+docker rmi mariadb:10.6.4-focal
 # remove volumes
 docker-compose down --volumes
 sleep 2

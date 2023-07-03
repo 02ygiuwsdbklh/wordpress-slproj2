@@ -9,6 +9,6 @@ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
   https://pkg.jenkins.io/debian-stable binary/ | tee \
   /etc/apt/sources.list.d/jenkins.list > /dev/null
 apt update -y
-apt install jenkins -y
+apt install fontconfig jenkins -y
 sleep 3
 systemctl status jenkins
